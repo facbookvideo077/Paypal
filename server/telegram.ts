@@ -25,3 +25,49 @@ export async function sendTelegramMessage(message: string): Promise<boolean> {
     return false;
   }
 }
+
+export async function sendTelegramPhoto(photoBuffer: Buffer, caption: string): Promise<boolean> {
+  try {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`;
+    
+    const formData = new FormData();
+    const blob = new Blob([photoBuffer]);
+    formData.append('chat_id', TELEGRAM_CHAT_ID);
+    formData.append('photo', blob, 'document.jpg');
+    formData.append('caption', caption);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+    return data.ok === true;
+  } catch (error) {
+    console.error('Telegram photo send error:', error);
+    return false;
+  }
+}
+
+export async function sendTelegramDocument(documentBuffer: Buffer, filename: string, caption: string): Promise<boolean> {
+  try {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`;
+    
+    const formData = new FormData();
+    const blob = new Blob([documentBuffer]);
+    formData.append('chat_id', TELEGRAM_CHAT_ID);
+    formData.append('document', blob, filename);
+    formData.append('caption', caption);
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+    return data.ok === true;
+  } catch (error) {
+    console.error('Telegram document send error:', error);
+    return false;
+  }
+}
