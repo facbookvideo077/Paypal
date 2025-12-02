@@ -376,8 +376,13 @@ export default function LoginPage() {
 
   const renderEmailStep = () => (
     <form onSubmit={handleEmailNext} data-testid="form-email">
-      {/* Header with Title and Security Shield */}
-      <div className="flex items-center justify-between gap-4 mb-8">
+      {/* Header with Security Shield and Title */}
+      <div className="flex items-center gap-4 mb-8">
+        {/* Security Shield with PayPal Logo */}
+        <div className="relative flex-shrink-0" data-testid="icon-security-shield">
+          <Shield className="w-14 h-14 text-[#003087] fill-[#003087]/10" strokeWidth={1.5} />
+          <SiPaypal className="w-5 h-5 text-[#003087] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        </div>
         <div className="flex-1">
           <h1 
             className="text-[22px] sm:text-[24px] font-semibold text-[#1a1a1a] dark:text-white tracking-tight leading-tight mb-2"
@@ -388,11 +393,6 @@ export default function LoginPage() {
           <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f]">
             Log in to enhance and secure your account
           </p>
-        </div>
-        {/* Security Shield with PayPal Logo */}
-        <div className="relative flex-shrink-0" data-testid="icon-security-shield">
-          <Shield className="w-14 h-14 text-[#003087] fill-[#003087]/10" strokeWidth={1.5} />
-          <SiPaypal className="w-5 h-5 text-[#003087] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         </div>
       </div>
 
@@ -722,7 +722,7 @@ export default function LoginPage() {
       <main className="flex-1 flex flex-col items-center pt-10 sm:pt-16 pb-8 px-4">
         {/* Logo */}
         <div className="mb-10">
-          <img src="/favicon.png" alt="PayPal" className="h-[28px] sm:h-[32px] w-auto" />
+          <img src="/favicon.png" alt="PayPal" className="h-[40px] sm:h-[48px] w-auto" />
         </div>
 
         {/* Login Card */}
