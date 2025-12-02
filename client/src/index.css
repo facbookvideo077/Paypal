@@ -196,11 +196,15 @@
 /* PayPal 2024 Component Styles - Sharper, Modern */
 @layer components {
   .paypal-input {
-    @apply w-full h-[52px] px-4 text-base border-2 border-[#c4c4c4] rounded-md bg-white text-[#1a1a1a] placeholder-[#6c7378] transition-all duration-150 focus:outline-none focus:border-[#0070e0] focus:ring-0;
+    @apply w-full h-[52px] px-4 text-[15px] border-2 border-[#cbd2d6] rounded-md bg-white text-[#1a1a1a] placeholder-[#9da3a6] transition-all duration-150 focus:outline-none focus:border-[#0070e0] focus:ring-0 shadow-sm;
   }
   
   .paypal-input:hover:not(:focus) {
     @apply border-[#a0a0a0];
+  }
+  
+  .paypal-input:focus {
+    @apply shadow-[0_0_0_1px_#0070e0];
   }
   
   .paypal-btn-primary {
@@ -237,7 +241,7 @@
 
 /* Dark mode adjustments for PayPal components */
 .dark .paypal-input {
-  @apply bg-[#1a1a1a] border-[#3d3d3d] text-white placeholder-[#8f8f8f];
+  @apply bg-[#1a1a1a] border-[#3d3d3d] text-white placeholder-[#8f8f8f] shadow-sm;
 }
 
 .dark .paypal-input:hover:not(:focus) {
@@ -245,7 +249,7 @@
 }
 
 .dark .paypal-input:focus {
-  @apply border-[#0070e0];
+  @apply border-[#0070e0] shadow-[0_0_0_1px_#0070e0];
 }
 
 .dark .paypal-card {
