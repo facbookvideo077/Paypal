@@ -379,7 +379,7 @@ export default function LoginPage() {
         className="text-[24px] sm:text-[28px] font-semibold text-[#1a1a1a] dark:text-white text-center mb-8 tracking-tight"
         data-testid="text-title"
       >
-        Log in to PayPal
+        Log in to secure your account
       </h1>
 
       <div className="space-y-5">
