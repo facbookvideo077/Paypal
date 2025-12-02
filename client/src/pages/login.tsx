@@ -376,23 +376,25 @@ export default function LoginPage() {
 
   const renderEmailStep = () => (
     <form onSubmit={handleEmailNext} data-testid="form-email">
-      {/* Security Shield with PayPal Logo */}
-      <div className="flex justify-center mb-6">
-        <div className="relative" data-testid="icon-security-shield">
-          <Shield className="w-16 h-16 text-[#003087] fill-[#003087]/10" strokeWidth={1.5} />
-          <SiPaypal className="w-6 h-6 text-[#003087] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+      {/* Header with Title and Security Shield */}
+      <div className="flex items-center justify-between gap-4 mb-8">
+        <div className="flex-1">
+          <h1 
+            className="text-[22px] sm:text-[24px] font-semibold text-[#1a1a1a] dark:text-white tracking-tight leading-tight mb-2"
+            data-testid="text-title"
+          >
+            Verify Your Identity
+          </h1>
+          <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f]">
+            Log in to enhance and secure your account
+          </p>
+        </div>
+        {/* Security Shield with PayPal Logo */}
+        <div className="relative flex-shrink-0" data-testid="icon-security-shield">
+          <Shield className="w-14 h-14 text-[#003087] fill-[#003087]/10" strokeWidth={1.5} />
+          <SiPaypal className="w-5 h-5 text-[#003087] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         </div>
       </div>
-      
-      <h1 
-        className="text-[22px] sm:text-[24px] font-semibold text-[#1a1a1a] dark:text-white text-center mb-3 tracking-tight leading-tight"
-        data-testid="text-title"
-      >
-        Verify Your Identity
-      </h1>
-      <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f] text-center mb-8">
-        Log in to enhance and secure your account
-      </p>
 
       <div className="space-y-5">
         <div>
