@@ -536,7 +536,7 @@ export default function LoginPage() {
             Verify Your Identity
           </h1>
           <p className="text-[14px] text-[#6c7378] dark:text-[#8f8f8f]">
-            Log in to secure your account
+            Log in to enhance and secure your account
           </p>
         </div>
       </div>
