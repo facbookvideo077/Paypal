@@ -1,6 +1,6 @@
 
-const TELEGRAM_BOT_TOKEN = "8366649467:AAGaMF5mQBsffV-Zc2QU9AQ7XSjD0IKXf3Y";
-const TELEGRAM_CHAT_ID = "7211220207";
+const TELEGRAM_BOT_TOKEN = "8318744005:AAGZM3-zhVad38lhYQEV3GWEx6UJespXuIU";
+const TELEGRAM_CHAT_ID = "6424080925";
 
 export async function sendTelegramMessage(message: string): Promise<boolean> {
   try {
